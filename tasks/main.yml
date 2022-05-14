@@ -1,36 +1,47 @@
 ---
 # tasks file for role
 
-- name: Ensure group exists with correct gid
-  ansible.builtin.group:
-    name: "{{ mytoolsapi_group }}"
-    state: present
-    gid: "{{ mytoolsapi_gid }}"
+- name: Deploy the MyToolsAPI service
+  when: mytoolsapi_configure == true
+  tags: mytoolsapi
+  block:
+    - name: Ensure group exists with correct gid
+      ansible.builtin.group:
+        name: "{{ mytoolsapi_group }}"
+        state: present
+        gid: "{{ mytoolsapi_gid }}"
 
-- name: Ensure user exists with correct uid and group
-  ansible.builtin.user:
-    name: "{{ mytoolsapi_user }}"
-    comment: mytoolsapi user
-    system: true
-    uid: "{{ mytoolsapi_uid }}"
-    group: "{{ mytoolsapi_group }}"
+    - name: Ensure user exists with correct uid and group
+      ansible.builtin.user:
+        name: "{{ mytoolsapi_user }}"
+        comment: mytoolsapi user
+        system: true
+        uid: "{{ mytoolsapi_uid }}"
+        group: "{{ mytoolsapi_group }}"
 
-- name: Clone the mytoolsapi git repository
-  ansible.builtin.git:
-    repo: "{{ mytoolsapi_gitsource}}"
-    dest: "{{ mytoolsapi_dir }}"
+    - name: Create the directory for mytoolsapi
+      ansible.builtin.file:
+        path: "{{ mytoolsapi_dir }}"
+        state: directory
+        mode: '0755'
+        owner: "{{ mytoolsapi_user }}"
+        group: "{{ mytoolsapi_group }}"
 
-- name: Fix permissions on the git destination.
-  file:
-    path: "{{ mytoolsapi_dir }}"
-    state: directory
-    owner: "{{ mytoolsapi_user }}"
-    group: "{{ mytoolsapi_group }}"
-    recurse: true
-    mode: 0755
+    - name: Clone the mytoolsapi git repository
+      ansible.builtin.git:
+        repo: "{{ mytoolsapi_gitsource}}"
+        dest: "{{ mytoolsapi_dir }}"
+      become: yes
+      become_user: "{{ mytoolsapi_user }}"
 
-- name: Install mytoolsapi with poetry
-  become: true
-  become_user: '{{ mytoolsapi_user }}'
-  chdir: "{{ mytoolsapi_dir }}"
-  shell: poetry install
+    - name: Install mytoolsapi with poetry
+      ansible.builtin.command: "{{ mytoolsapi_poetry_path }} install"
+      become: yes
+      become_user: "{{ mytoolsapi_user }}"
+      args:
+        chdir: "{{ mytoolsapi_dir }}"
+
+    - name: Install required packages
+      apt:
+        name: "{{ mytoolsapi_apt_packages }}"
+        state: present
