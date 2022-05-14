@@ -1,0 +1,18 @@
+---
+# defaults file for role
+
+# enable mytoolsapi to be installed
+mytoolsapi_configure: false
+
+# Basedir of mytoolsapi
+mytoolsapi_dir: /opt/mytoolsapi
+
+# mytoolsapi user/group
+mytoolsapi_user: mytoolsapi
+mytoolsapi_group: "{{ mytoolsapi_user }}"
+
+# git source for the mytoolsapi application
+# mytoolsapi_gitsource: https://github.com/someone/repo.git
+
+# path to poetry tool
+mytoolsapi_poetry_path: /usr/local/bin/poetry
