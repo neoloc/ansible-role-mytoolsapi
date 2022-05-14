@@ -40,6 +40,17 @@
       become_user: "{{ mytoolsapi_user }}"
       args:
         chdir: "{{ mytoolsapi_dir }}"
+      when: mytoolsapi_use_proxy == false
+
+    - name: Install mytoolsapi with poetry using proxy
+      ansible.builtin.command: "{{ mytoolsapi_poetry_path }} install"
+      become: yes
+      become_user: "{{ mytoolsapi_user }}"
+      args:
+        chdir: "{{ mytoolsapi_dir }}"
+      environment:
+        http_proxy: "{{ mytoolsapi_proxy }}"
+      when: mytoolsapi_use_proxy == true
 
     - name: Install required packages
       apt:

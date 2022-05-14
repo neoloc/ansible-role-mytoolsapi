@@ -4,6 +4,10 @@
 # enable mytoolsapi to be installed
 mytoolsapi_configure: false
 
+# use a proxy? This is only for the poetry command
+mytoolsapi_use_proxy: false
+#mytoolsapi_proxy: ""
+
 # Basedir of mytoolsapi
 mytoolsapi_dir: /opt/mytoolsapi
 
