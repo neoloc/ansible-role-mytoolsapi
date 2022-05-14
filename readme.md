@@ -23,6 +23,8 @@ mytoolsapi_configure: true
 mytoolsapi_dir: /opt/mytoolsapi
 mytoolsapi_user: mytoolsapi
 mytoolsapi_group: "{{ mytoolsapi_user }}"
+mytoolsapi_uid: 10000
+mytoolsapi_gid: 10000
 mytoolsapi_gitsource: https://git.someserver.tld/user/repo.git
 mytoolsapi_poetry_path: /usr/local/bin/poetry
 ```
