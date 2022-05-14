@@ -10,6 +10,8 @@ mytoolsapi_dir: /opt/mytoolsapi
 # mytoolsapi user/group
 mytoolsapi_user: mytoolsapi
 mytoolsapi_group: "{{ mytoolsapi_user }}"
+mytoolsapi_uid: 10000
+mytoolsapi_gid: 10000
 
 # git source for the mytoolsapi application
 # mytoolsapi_gitsource: https://github.com/someone/repo.git

@@ -13,7 +13,7 @@
     comment: mytoolsapi user
     system: true
     uid: "{{ mytoolsapi_uid }}"
-    group: admin
+    group: "{{ mytoolsapi_group }}"
 
 - name: Clone the mytoolsapi git repository
   ansible.builtin.git:
