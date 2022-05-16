@@ -45,3 +45,26 @@
       apt:
         name: "{{ mytoolsapi_apt_packages }}"
         state: present
+
+    - name: Create the directory for chrome-binary
+      ansible.builtin.file:
+        path: "/home/{{ mytoolsapi_user }}/.local/share/pyppeteer/local-chromium/{{ mytoolsapi_chrome_build }}/"
+        state: directory
+        mode: '0755'
+        owner: "{{ mytoolsapi_user }}"
+        group: "{{ mytoolsapi_group }}"
+
+    - name: Check if chrome has already been downloaded
+      stat:
+        path: "/home/{{ mytoolsapi_user }}/.local/share/pyppeteer/local-chromium/{{ mytoolsapi_chrome_build }}/chrome-linux/chrome"
+      register: chrome_downloaded
+
+    - name: Download and unzip Chrome-Linux build for python
+      ansible.builtin.unarchive:
+        src: "https://storage.googleapis.com/chromium-browser-snapshots/Linux_x64/{{ mytoolsapi_chrome_build }}/chrome-linux.zip"
+        dest: "/home/{{ mytoolsapi_user }}/.local/share/pyppeteer/local-chromium/{{ mytoolsapi_chrome_build }}/"
+        remote_src: yes
+        mode: '0770'
+        owner: "{{ mytoolsapi_user }}"
+        group: "{{ mytoolsapi_group }}"
+      when: not chrome_downloaded.stat.exists

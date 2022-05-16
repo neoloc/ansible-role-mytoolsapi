@@ -16,6 +16,9 @@ mytoolsapi_gid: 10000
 # git source for the mytoolsapi application
 # mytoolsapi_gitsource: https://github.com/someone/repo.git
 
+# chrome build
+mytoolsapi_chrome_build: 588429
+
 # path to poetry tool
 mytoolsapi_poetry_path: /usr/local/bin/poetry
 
@@ -71,3 +74,4 @@ mytoolsapi_apt_packages:
   - libgraphite2-3
   - libgbm1
   - chromium
+  - unzip
