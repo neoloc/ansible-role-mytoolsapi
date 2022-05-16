@@ -34,12 +34,26 @@
       become: yes
       become_user: "{{ mytoolsapi_user }}"
 
+    - name: Check for poetry lock file
+      stat:
+        path: "{{ mytoolsapi_dir }}/poetry.lock"
+      register: poetry_lockfile
+
     - name: Install mytoolsapi with poetry
       ansible.builtin.command: "{{ mytoolsapi_poetry_path }} install"
       become: yes
       become_user: "{{ mytoolsapi_user }}"
       args:
         chdir: "{{ mytoolsapi_dir }}"
+      when: not poetry_lockfile.stat.exists
+
+    - name: Update mytoolsapi with poetry
+      ansible.builtin.command: "{{ mytoolsapi_poetry_path }} update"
+      become: yes
+      become_user: "{{ mytoolsapi_user }}"
+      args:
+        chdir: "{{ mytoolsapi_dir }}"
+      when: poetry_lockfile.stat.exists
 
     - name: Install required packages
       apt:
